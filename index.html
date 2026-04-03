@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Plant-Care Pro" />
+  <meta name="theme-color" content="#1e1608" />
+  <title>Plant-Care Pro</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --osrs-gold: #c8a04a;
+      --osrs-gold-light: #e8c870;
+      --osrs-brown-dark: #2a1f0e;
+      --osrs-brown-mid: #3d2e14;
+      --osrs-brown-light: #5a4020;
+      --osrs-panel: #1e1608;
+      --osrs-border: #6b4c1e;
+      --osrs-text: #e8d8a0;
+      --osrs-hp-green: #00b050;
+      --osrs-hp-yellow: #ffcc00;
+      --osrs-hp-red: #e84118;
+      --osrs-xp: #ff6b35;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      background: var(--osrs-panel);
+      color: var(--osrs-text);
+      font-family: 'Share Tech Mono', monospace;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Layout shell ── */
+    .app-shell {
+      display: flex;
+      flex-direction: column;
+      height: 100dvh;
+      height: 100vh; /* fallback */
+    }
+
+    /* ── Header ── */
+    .osrs-header {
+      flex-shrink: 0;
+      background: #1a0e04;
+      border-bottom: 2px solid var(--osrs-border);
+      padding: calc(var(--safe-top) + 10px) 16px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .osrs-logo {
+      font-family: 'Crimson Pro', serif;
+      font-weight: 600;
+      font-size: 28px;
+      color: var(--osrs-gold);
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .header-chips {
+      display: flex;
+      gap: 6px;
+      flex-wrap: nowrap;
+      overflow: hidden;
+    }
+
+    .chip {
+      background: var(--osrs-brown-dark);
+      border: 1px solid var(--osrs-border);
+      border-radius: 4px;
+      padding: 5px 11px;
+      font-size: 15px;
+      color: var(--osrs-gold-light);
+      white-space: nowrap;
+    }
+
+    .chip b { color: #fff; }
+
+    /* ── Scrollable body ── */
+    .app-body {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-y: contain;
+    }
+
+    /* ── Bottom nav ── */
+    .bottom-nav {
+      flex-shrink: 0;
+      display: flex;
+      background: #1a0e04;
+      border-top: 2px solid var(--osrs-border);
+      /* extend background into the home indicator area */
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      position: relative;
+    }
+
+    /* solid colour fill below the nav into safe zone */
+    .bottom-nav::after {
+      content: '';
+      position: absolute;
+      bottom: calc(-1 * env(safe-area-inset-bottom, 0px));
+      left: 0; right: 0;
+      height: env(safe-area-inset-bottom, 0px);
+      background: #1a0e04;
+    }
+
+    .nav-tab {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      padding: 12px 4px;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      color: #806030;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 13px;
+      transition: color 0.15s;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .nav-tab .nav-icon { font-size: 28px; line-height: 1; }
+    .nav-tab.active { color: var(--osrs-gold); }
+    .nav-tab.active .nav-icon { filter: drop-shadow(0 0 4px #c8a04a88); }
+
+    /* ── Panels ── */
+    .panel { display: none; padding: 12px 12px 16px; }
+    .panel.active { display: block; }
+
+    .panel-heading {
+      font-family: 'Crimson Pro', serif;
+      font-size: 20px;
+      color: var(--osrs-gold);
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid var(--osrs-border);
+      padding-bottom: 8px;
+      margin-bottom: 14px;
+    }
+
+    /* ── Plant cards ── */
+    .plant-card {
+      background: var(--osrs-brown-dark);
+      border: 1px solid var(--osrs-border);
+      border-radius: 4px;
+      padding: 14px;
+      margin-bottom: 12px;
+      position: relative;
+    }
+
+    .plant-card.warning { border-color: var(--osrs-hp-yellow); }
+    .plant-card.critical { border-color: var(--osrs-hp-red); animation: pulse-red 2s infinite; }
+
+    @keyframes pulse-red {
+      0%,100% { box-shadow: none; }
+      50% { box-shadow: 0 0 8px #e8411840; }
+    }
+
+    .card-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .plant-emoji { font-size: 46px; line-height: 1; flex-shrink: 0; }
+
+    .plant-meta { flex: 1; min-width: 0; }
+    .plant-name {
+      font-family: 'Crimson Pro', serif;
+      font-weight: 600;
+      font-size: 22px;
+      color: var(--osrs-gold-light);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .plant-species { font-size: 14px; color: #806030; margin-top: 2px; }
+    .level-badge {
+      background: var(--osrs-panel);
+      border: 1px solid var(--osrs-border);
+      border-radius: 3px;
+      padding: 3px 10px;
+      font-size: 15px;
+      color: var(--osrs-gold);
+      flex-shrink: 0;
+    }
+
+    /* bars */
+    .bar-row { margin-bottom: 7px; }
+    .bar-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      color: #a08040;
+      margin-bottom: 3px;
+    }
+    .bar-bg {
+      background: var(--osrs-panel);
+      border: 1px solid #1a1408;
+      height: 18px;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .bar-fill { height: 100%; transition: width 0.5s ease; position: relative; }
+    .bar-fill::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: rgba(255,255,255,0.12); }
+    .hp-high { background: var(--osrs-hp-green); }
+    .hp-mid  { background: var(--osrs-hp-yellow); }
+    .hp-low  { background: var(--osrs-hp-red); }
+    .water-fill { background: #1e88e5; }
+    .fert-fill  { background: #7b5e2a; }
+
+    .next-care {
+      display: flex;
+      gap: 12px;
+      font-size: 14px;
+      margin: 8px 0 10px;
+      flex-wrap: wrap;
+    }
+    .next-care .urgent { color: var(--osrs-hp-red); }
+    .next-care .soon   { color: var(--osrs-hp-yellow); }
+    .next-care .ok     { color: var(--osrs-hp-green); }
+
+    .card-actions { display: flex; gap: 8px; }
+
+    .btn {
+      flex: 1;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 16px;
+      background: var(--osrs-panel);
+      border: 1px solid var(--osrs-border);
+      color: var(--osrs-gold-light);
+      padding: 12px 4px;
+      border-radius: 3px;
+      cursor: pointer;
+      text-align: center;
+      transition: background 0.1s, transform 0.08s;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+    }
+    .btn:active { transform: scale(0.96); }
+    .btn.water { border-color: #1565c0; color: #64b5f6; background: #0d1c3a; }
+    .btn.fert  { border-color: #5a3e10; color: #c49a3c; }
+    .btn.del   { border-color: #7a1010; color: #e57373; background: #1a0505; flex: 0 0 52px; }
+
+    /* ── Empty state ── */
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: #5a4020;
+    }
+    .empty-state .e-icon { font-size: 64px; margin-bottom: 0.5rem; opacity: 0.45; }
+    .empty-state p { font-family: 'Crimson Pro', serif; font-size: 20px; }
+    .empty-state small { font-size: 16px; color: #3d2e14; margin-top: 6px; display: block; }
+
+    /* ── Add form ── */
+    .form-group { margin-bottom: 14px; }
+    .form-label { display: block; font-size: 14px; color: #a08040; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; }
+
+    .form-input, .form-select {
+      width: 100%;
+      background: var(--osrs-brown-dark);
+      border: 1px solid var(--osrs-border);
+      border-radius: 3px;
+      color: var(--osrs-text);
+      padding: 12px 12px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 16px;
+      outline: none;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    .form-input:focus, .form-select:focus { border-color: var(--osrs-gold); }
+    .form-select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23c8a04a'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
+
+    .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+    .submit-btn {
+      width: 100%;
+      font-family: 'Crimson Pro', serif;
+      font-weight: 600;
+      font-size: 20px;
+      background: linear-gradient(180deg, #5a3a10, #3a2608);
+      border: 1px solid var(--osrs-gold);
+      color: var(--osrs-gold);
+      padding: 15px;
+      border-radius: 3px;
+      cursor: pointer;
+      margin-top: 4px;
+      letter-spacing: 0.5px;
+      touch-action: manipulation;
+    }
+    .submit-btn:active { opacity: 0.85; }
+
+    /* ── Stats ── */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .summary-card {
+      background: var(--osrs-brown-dark);
+      border: 1px solid var(--osrs-border);
+      border-radius: 4px;
+      padding: 14px 10px;
+      text-align: center;
+    }
+    .s-val { font-family: 'Crimson Pro', serif; font-size: 38px; font-weight: 600; color: var(--osrs-gold); display: block; }
+    .s-lbl { font-size: 13px; color: #806030; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+    .skill-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 9px 0;
+      border-bottom: 1px solid #1a1408;
+    }
+    .sk-icon { font-size: 24px; width: 28px; text-align: center; }
+    .sk-name { font-size: 16px; color: var(--osrs-gold-light); min-width: 100px; }
+    .sk-bar-bg { flex: 1; height: 14px; background: var(--osrs-panel); border: 1px solid #1a1408; border-radius: 1px; overflow: hidden; }
+    .sk-bar-fill { height: 100%; background: var(--osrs-xp); transition: width 0.7s ease; }
+    .sk-lvl { font-size: 15px; color: var(--osrs-gold); min-width: 28px; text-align: right; }
+
+    /* ── Log ── */
+    .log-entry {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 9px 0;
+      border-bottom: 1px solid #1a1408;
+      font-size: 15px;
+    }
+    .log-time { color: #5a4020; font-size: 13px; min-width: 48px; padding-top: 1px; }
+    .log-msg { flex: 1; color: var(--osrs-text); }
+    .log-xp { color: var(--osrs-xp); font-size: 14px; white-space: nowrap; }
+
+    /* ── XP Toast ── */
+    .xp-toast {
+      position: fixed;
+      top: calc(var(--safe-top) + 80px);
+      left: 50%;
+      transform: translateX(-50%) translateY(-6px);
+      background: var(--osrs-brown-dark);
+      border: 1px solid var(--osrs-gold);
+      border-radius: 4px;
+      padding: 10px 20px;
+      font-size: 17px;
+      color: var(--osrs-xp);
+      z-index: 999;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s, transform 0.2s;
+      white-space: nowrap;
+    }
+    .xp-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ── Legend ── */
+    .legend { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; }
+    .legend-item { display: flex; align-items: center; gap: 6px; font-size: 14px; color: #a08040; }
+    .legend-dot { width: 13px; height: 13px; border-radius: 2px; flex-shrink: 0; }
+
+    /* alert badge on nav */
+    .nav-badge {
+      position: absolute;
+      top: 8px;
+      right: calc(50% - 22px);
+      background: var(--osrs-hp-red);
+      color: #fff;
+      font-size: 11px;
+      min-width: 17px;
+      height: 17px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 4px;
+    }
+    .nav-tab { position: relative; }
+  </style>
+
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- Header -->
+
+  <div class="osrs-header">
+    <div class="osrs-logo">🌿 Plant-Care Pro</div>
+    <div class="header-chips">
+      <div class="chip">XP: <b id="hdr-xp">0</b></div>
+      <div class="chip">Plants: <b id="hdr-count">0</b></div>
+    </div>
+  </div>
+
+  <!-- XP Toast -->
+
+  <div class="xp-toast" id="xp-toast"></div>
+
+  <!-- Scrollable content -->
+
+  <div class="app-body" id="app-body">
+
+```
+<!-- Garden Panel -->
+<div class="panel active" id="panel-garden">
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#00b050"></div>Healthy</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#ffcc00"></div>Needs care</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#e84118"></div>Critical</div>
+  </div>
+  <div id="plant-list"></div>
+</div>
+
+<!-- Add Plant Panel -->
+<div class="panel" id="panel-add">
+  <div class="panel-heading">Add Plant to Patch</div>
+
+  <div class="form-group">
+    <label class="form-label">Plant Name</label>
+    <input class="form-input" id="f-name" placeholder="e.g. Monstera Stan" maxlength="28" />
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">Species</label>
+    <select class="form-select" id="f-species">
+      <option value="Monstera deliciosa">🌿 Monstera</option>
+      <option value="Epipremnum aureum">🍃 Pothos</option>
+      <option value="Sansevieria trifasciata">🗡️ Snake Plant</option>
+      <option value="Ficus lyrata">🌳 Fiddle Leaf Fig</option>
+      <option value="Cactaceae">🌵 Cactus</option>
+      <option value="Orchidaceae">🌸 Orchid</option>
+      <option value="Spathiphyllum">🤍 Peace Lily</option>
+      <option value="Chlorophytum comosum">🌾 Spider Plant</option>
+      <option value="Aloe vera">🌱 Aloe Vera</option>
+      <option value="Hedera helix">🍀 Ivy</option>
+      <option value="Custom">🌺 Other</option>
+    </select>
+  </div>
+
+  <div class="row-2">
+    <div class="form-group">
+      <label class="form-label">Water every (days)</label>
+      <input class="form-input" id="f-water" type="number" min="1" max="60" value="7" inputmode="numeric" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Fertilise every (days)</label>
+      <input class="form-input" id="f-fert" type="number" min="7" max="90" value="30" inputmode="numeric" />
+    </div>
+  </div>
+
+  <div class="row-2">
+    <div class="form-group">
+      <label class="form-label">Last watered</label>
+      <input class="form-input" id="f-last-water" type="date" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Last fertilised</label>
+      <input class="form-input" id="f-last-fert" type="date" />
+    </div>
+  </div>
+
+  <button class="submit-btn" onclick="addPlant()">➕ Plant Seed</button>
+</div>
+
+<!-- Stats Panel -->
+<div class="panel" id="panel-stats">
+  <div class="panel-heading">Farming Stats</div>
+  <div class="summary-grid">
+    <div class="summary-card"><span class="s-val" id="s-total">0</span><div class="s-lbl">Total Plants</div></div>
+    <div class="summary-card"><span class="s-val" id="s-healthy">0</span><div class="s-lbl">Healthy</div></div>
+    <div class="summary-card"><span class="s-val" id="s-tasks">0</span><div class="s-lbl">Tasks Done</div></div>
+    <div class="summary-card"><span class="s-val" id="s-xp">0</span><div class="s-lbl">Total XP</div></div>
+  </div>
+  <div class="panel-heading">Skill Levels</div>
+  <div class="skill-row">
+    <div class="sk-icon">💧</div>
+    <div class="sk-name">Watering</div>
+    <div class="sk-bar-bg"><div class="sk-bar-fill" id="sk-water" style="width:0%"></div></div>
+    <div class="sk-lvl" id="sk-water-lv">1</div>
+  </div>
+  <div class="skill-row">
+    <div class="sk-icon">🌱</div>
+    <div class="sk-name">Fertilising</div>
+    <div class="sk-bar-bg"><div class="sk-bar-fill" id="sk-fert" style="width:0%"></div></div>
+    <div class="sk-lvl" id="sk-fert-lv">1</div>
+  </div>
+  <div class="skill-row">
+    <div class="sk-icon">🏡</div>
+    <div class="sk-name">Horticulture</div>
+    <div class="sk-bar-bg"><div class="sk-bar-fill" id="sk-hort" style="width:0%"></div></div>
+    <div class="sk-lvl" id="sk-hort-lv">1</div>
+  </div>
+</div>
+
+<!-- Log Panel -->
+<div class="panel" id="panel-log">
+  <div class="panel-heading">Activity Log</div>
+  <div id="log-list">
+    <div class="empty-state"><div class="e-icon">📜</div><p>No activity yet.</p><small>Go tend your garden!</small></div>
+  </div>
+</div>
+```
+
+  </div><!-- /app-body -->
+
+  <!-- Bottom Nav -->
+
+  <div class="bottom-nav">
+    <button class="nav-tab active" data-panel="garden" onclick="switchPanel('garden', this)">
+      <div class="nav-icon">🌿</div>
+      <span>Garden</span>
+      <div class="nav-badge" id="alert-badge" style="display:none"></div>
+    </button>
+    <button class="nav-tab" data-panel="add" onclick="switchPanel('add', this)">
+      <div class="nav-icon">➕</div>
+      <span>Add</span>
+    </button>
+    <button class="nav-tab" data-panel="stats" onclick="switchPanel('stats', this)">
+      <div class="nav-icon">📊</div>
+      <span>Stats</span>
+    </button>
+    <button class="nav-tab" data-panel="log" onclick="switchPanel('log', this)">
+      <div class="nav-icon">📜</div>
+      <span>Log</span>
+    </button>
+  </div>
+
+</div><!-- /app-shell -->
+
+<script>
+(function () {
+  const EMOJI = {
+    'Monstera deliciosa': '🌿', 'Epipremnum aureum': '🍃',
+    'Sansevieria trifasciata': '🗡️', 'Ficus lyrata': '🌳',
+    'Cactaceae': '🌵', 'Orchidaceae': '🌸',
+    'Spathiphyllum': '🤍', 'Chlorophytum comosum': '🌾',
+    'Aloe vera': '🌱', 'Hedera helix': '🍀', 'Custom': '🌺'
+  };
+
+  let S = { plants: [], totalXp: 0, waterXp: 0, fertXp: 0, hortXp: 0, tasksDone: 0, log: [] };
+  try { const d = localStorage.getItem('pcp2'); if (d) S = JSON.parse(d); } catch (e) {}
+
+  function save() { try { localStorage.setItem('pcp2', JSON.stringify(S)); } catch (e) {} }
+
+  function today() { return new Date().toISOString().split('T')[0]; }
+
+  function daysSince(ds) {
+    if (!ds) return 999;
+    return Math.max(0, Math.floor((Date.now() - new Date(ds).getTime()) / 86400000));
+  }
+
+  function calcHp(p) {
+    const w = Math.min(1, daysSince(p.lastWatered) / p.waterEvery);
+    const f = Math.min(1, daysSince(p.lastFertilised) / (p.fertEvery * 2));
+    return Math.max(0, Math.round(100 - w * 70 - f * 30));
+  }
+
+  function calcPct(last, every) { return Math.min(100, Math.max(0, 100 - Math.round((daysSince(last) / every) * 100))); }
+
+  function hpCls(hp) { return hp > 60 ? 'hp-high' : hp > 30 ? 'hp-mid' : 'hp-low'; }
+  function cardCls(hp) { return hp <= 30 ? 'critical' : hp <= 60 ? 'warning' : ''; }
+
+  function careMsg(p) {
+    const dw = p.waterEvery - daysSince(p.lastWatered);
+    const df = p.fertEvery - daysSince(p.lastFertilised);
+    const wc = dw <= 0 ? 'urgent' : dw <= 2 ? 'soon' : 'ok';
+    const fc = df <= 0 ? 'urgent' : df <= 5 ? 'soon' : 'ok';
+    const wt = dw <= 0 ? '💧 Water NOW' : `💧 Water in ${dw}d`;
+    const ft = df <= 0 ? '🌱 Fert NOW' : `🌱 Fert in ${df}d`;
+    return `<span class="${wc}">${wt}</span><span class="${fc}">${ft}</span>`;
+  }
+
+  function xpForLvl(l) { return Math.floor(100 * Math.pow(l, 1.5)); }
+  function xpToLvl(x) { let l = 1; while (xpForLvl(l + 1) <= x && l < 99) l++; return l; }
+  function xpBarPct(x) {
+    const l = xpToLvl(x), lo = xpForLvl(l), hi = xpForLvl(Math.min(l + 1, 99));
+    return hi <= lo ? 100 : Math.round(((x - lo) / (hi - lo)) * 100);
+  }
+
+  function toast(msg) {
+    const t = document.getElementById('xp-toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(t._tid);
+    t._tid = setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  function addLog(msg, xp) {
+    const now = new Date();
+    S.log.unshift({ time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), msg, xp });
+    if (S.log.length > 60) S.log.pop();
+  }
+
+  // ── Renders ──
+
+  function renderGarden() {
+    const list = document.getElementById('plant-list');
+    if (!S.plants.length) {
+      list.innerHTML = '<div class="empty-state"><div class="e-icon">🌱</div><p>Your farming patch is empty.</p><small>Tap ➕ Add to start growing!</small></div>';
+      updateHeader(0);
+      return;
+    }
+    let alerts = 0;
+    list.innerHTML = S.plants.map((p, i) => {
+      const hp = calcHp(p);
+      const wp = calcPct(p.lastWatered, p.waterEvery);
+      const fp = calcPct(p.lastFertilised, p.fertEvery);
+      if (hp <= 60) alerts++;
+      return `
+        <div class="plant-card ${cardCls(hp)}">
+          <div class="card-top">
+            <div class="plant-emoji">${EMOJI[p.species] || '🌺'}</div>
+            <div class="plant-meta">
+              <div class="plant-name">${p.name}</div>
+              <div class="plant-species">${p.species}</div>
+            </div>
+            <div class="level-badge">Lv.${p.level}</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label"><span>❤ Health</span><span>${hp}/100</span></div>
+            <div class="bar-bg"><div class="bar-fill ${hpCls(hp)}" style="width:${hp}%"></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label"><span>💧 Hydration</span><span>${wp}%</span></div>
+            <div class="bar-bg"><div class="bar-fill water-fill" style="width:${wp}%"></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label"><span>🌱 Nutrients</span><span>${fp}%</span></div>
+            <div class="bar-bg"><div class="bar-fill fert-fill" style="width:${fp}%"></div></div>
+          </div>
+          <div class="next-care">${careMsg(p)}</div>
+          <div class="card-actions">
+            <button class="btn water" onclick="doWater(${i})">💧 Water</button>
+            <button class="btn fert" onclick="doFert(${i})">🌱 Fertilise</button>
+            <button class="btn del" onclick="doRemove(${i})">🗑</button>
+          </div>
+        </div>`;
+    }).join('');
+    updateHeader(alerts);
+  }
+
+  function updateHeader(alerts) {
+    document.getElementById('hdr-xp').textContent = S.totalXp;
+    document.getElementById('hdr-count').textContent = S.plants.length;
+    const badge = document.getElementById('alert-badge');
+    if (alerts > 0) { badge.style.display = 'flex'; badge.textContent = alerts; }
+    else badge.style.display = 'none';
+  }
+
+  function renderStats() {
+    document.getElementById('s-total').textContent = S.plants.length;
+    document.getElementById('s-healthy').textContent = S.plants.filter(p => calcHp(p) > 60).length;
+    document.getElementById('s-tasks').textContent = S.tasksDone;
+    document.getElementById('s-xp').textContent = S.totalXp;
+    const setSkill = (id, barId, xp) => {
+      document.getElementById(id).textContent = xpToLvl(xp);
+      document.getElementById(barId).style.width = xpBarPct(xp) + '%';
+    };
+    setSkill('sk-water-lv', 'sk-water', S.waterXp);
+    setSkill('sk-fert-lv', 'sk-fert', S.fertXp);
+    setSkill('sk-hort-lv', 'sk-hort', S.hortXp);
+  }
+
+  function renderLog() {
+    const el = document.getElementById('log-list');
+    if (!S.log.length) {
+      el.innerHTML = '<div class="empty-state"><div class="e-icon">📜</div><p>No activity yet.</p><small>Go tend your garden!</small></div>';
+      return;
+    }
+    el.innerHTML = S.log.map(e =>
+      `<div class="log-entry"><div class="log-time">${e.time}</div><div class="log-msg">${e.msg}</div><div class="log-xp">${e.xp > 0 ? '+' + e.xp + ' XP' : ''}</div></div>`
+    ).join('');
+  }
+
+  function renderAll() { renderGarden(); renderStats(); renderLog(); save(); }
+
+  // ── Actions ──
+
+  window.doWater = function (i) {
+    const p = S.plants[i];
+    const xp = 25 + Math.floor(p.level * 5);
+    p.lastWatered = today();
+    p.level = Math.min(p.level + 1, 99);
+    S.waterXp += xp; S.hortXp += Math.floor(xp / 2); S.totalXp += xp; S.tasksDone++;
+    addLog(`Watered ${p.name}`, xp);
+    toast(`💧 Watering XP +${xp}!`);
+    renderAll();
+  };
+
+  window.doFert = function (i) {
+    const p = S.plants[i];
+    const xp = 45 + Math.floor(p.level * 8);
+    p.lastFertilised = today();
+    p.level = Math.min(p.level + 1, 99);
+    S.fertXp += xp; S.hortXp += Math.floor(xp / 2); S.totalXp += xp; S.tasksDone++;
+    addLog(`Fertilised ${p.name}`, xp);
+    toast(`🌱 Farming XP +${xp}!`);
+    renderAll();
+  };
+
+  window.doRemove = function (i) {
+    const name = S.plants[i].name;
+    if (!confirm(`Remove ${name} from your patch?`)) return;
+    S.plants.splice(i, 1);
+    addLog(`Removed ${name} from patch`, 0);
+    renderAll();
+  };
+
+  window.addPlant = function () {
+    const name = document.getElementById('f-name').value.trim();
+    if (!name) { document.getElementById('f-name').focus(); return; }
+    const plant = {
+      name,
+      species: document.getElementById('f-species').value,
+      waterEvery: parseInt(document.getElementById('f-water').value) || 7,
+      fertEvery: parseInt(document.getElementById('f-fert').value) || 30,
+      lastWatered: document.getElementById('f-last-water').value || today(),
+      lastFertilised: document.getElementById('f-last-fert').value || today(),
+      level: 1
+    };
+    S.plants.push(plant);
+    S.hortXp += 10; S.totalXp += 10;
+    addLog(`Added ${plant.name} to the patch`, 10);
+    document.getElementById('f-name').value = '';
+    toast(`🌿 New plant! +10 XP`);
+    switchPanel('garden', document.querySelector('[data-panel="garden"]'));
+    renderAll();
+  };
+
+  // ── Nav ──
+
+  window.switchPanel = function (id, btn) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('panel-' + id).classList.add('active');
+    btn.classList.add('active');
+    document.getElementById('app-body').scrollTop = 0;
+    if (id === 'stats') renderStats();
+    if (id === 'log') renderLog();
+  };
+
+  // ── Init ──
+  const t = today();
+  document.getElementById('f-last-water').value = t;
+  document.getElementById('f-last-fert').value = t;
+
+  setInterval(renderGarden, 60000);
+  renderAll();
+})();
+</script>
+
+</body>
+</html>
