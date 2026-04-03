@@ -8,6 +8,7 @@
 <style>
 :root {
   --osrs-gold: #c8a04a;
+  --osrs-gold-light: #e8c870;
   --osrs-brown-dark: #2a1f0e;
   --osrs-panel: #1e1608;
   --osrs-border: #6b4c1e;
@@ -24,68 +25,97 @@ html, body {
   overflow: hidden;
   background: #1a0e04;
   color: var(--osrs-text);
-  font-family: monospace;
+  font-family: 'Segoe UI', sans-serif;
 }
 
 .app-shell {
   display: flex;
   flex-direction: column;
   height: 100dvh;
-  background: #1a0e04;
 }
 
 .app-body {
   flex: 1;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  padding: 12px;
 }
 
 .bottom-nav {
   display: flex;
   background: #1a0e04;
   border-top: 2px solid var(--osrs-border);
-  padding-bottom: calc(var(--safe-bottom) + 4px);
+  padding-bottom: calc(var(--safe-bottom) + 6px);
 }
 
 .nav-tab {
   flex: 1;
-  padding: 10px;
-  background: none;
-  border: none;
+  text-align: center;
+  padding: 12px 4px;
+  font-size: 14px;
   color: #806030;
-  cursor: pointer;
+  border: none;
+  background: none;
 }
-.nav-tab.active { color: var(--osrs-gold); }
+.nav-tab.active {
+  color: var(--osrs-gold);
+}
 
-.panel { display: none; padding: 12px; }
+.nav-icon {
+  font-size: 26px; /* BIGGER */
+  display: block;
+}
+
+.panel { display: none; }
 .panel.active { display: block; }
+
+.panel-heading {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: var(--osrs-gold);
+}
 
 .plant-card {
   background: var(--osrs-brown-dark);
   border: 1px solid var(--osrs-border);
-  padding: 10px;
-  margin-bottom: 10px;
+  border-radius: 6px;
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+.plant-name {
+  font-size: 18px;
+  font-weight: bold;
 }
 
 .bar {
-  height: 10px;
-  margin: 4px 0;
+  height: 14px; /* BIGGER */
+  margin: 6px 0;
   background: #000;
+  border-radius: 3px;
 }
-.fill {
-  height: 100%;
-}
+
+.fill { height: 100%; }
 .green { background: var(--osrs-hp-green); }
 .yellow { background: var(--osrs-hp-yellow); }
 .red { background: var(--osrs-hp-red); }
 
 .btn {
-  margin-top: 5px;
-  padding: 6px;
+  padding: 10px;
+  margin-top: 6px;
+  font-size: 14px;
+  border-radius: 4px;
   background: var(--osrs-panel);
   border: 1px solid var(--osrs-border);
   color: var(--osrs-text);
   cursor: pointer;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  margin-bottom: 10px;
 }
 </style>
 </head>
@@ -95,153 +125,118 @@ html, body {
 
 <div class="app-body">
 
-<!-- Garden -->
 <div class="panel active" id="panel-garden">
   <div id="plant-list"></div>
 </div>
 
-<!-- Add -->
 <div class="panel" id="panel-add">
-  <input id="f-name" placeholder="Plant name"><br><br>
-  <button onclick="addPlant()">Add Plant</button>
+  <div class="panel-heading">Add Plant</div>
+  <input id="f-name" placeholder="Plant name">
+  <button class="btn" onclick="addPlant()">➕ Add Plant</button>
 </div>
 
-<!-- Stats -->
 <div class="panel" id="panel-stats">
-  <div>Total XP: <span id="s-xp">0</span></div>
+  <div class="panel-heading">Stats</div>
+  XP: <span id="xp"></span>
 </div>
 
-<!-- Log -->
 <div class="panel" id="panel-log">
+  <div class="panel-heading">Log</div>
   <div id="log"></div>
 </div>
 
 </div>
 
 <div class="bottom-nav">
-  <button class="nav-tab active" onclick="switchPanel('garden', this)">🌿</button>
-  <button class="nav-tab" onclick="switchPanel('add', this)">➕</button>
-  <button class="nav-tab" onclick="switchPanel('stats', this)">📊</button>
-  <button class="nav-tab" onclick="switchPanel('log', this)">📜</button>
+  <button class="nav-tab active" onclick="switchPanel('garden', this)">
+    <span class="nav-icon">🌿</span>Garden
+  </button>
+  <button class="nav-tab" onclick="switchPanel('add', this)">
+    <span class="nav-icon">➕</span>Add
+  </button>
+  <button class="nav-tab" onclick="switchPanel('stats', this)">
+    <span class="nav-icon">📊</span>Stats
+  </button>
+  <button class="nav-tab" onclick="switchPanel('log', this)">
+    <span class="nav-icon">📜</span>Log
+  </button>
 </div>
 
 </div>
 
 <script>
-(function () {
+(function(){
 
-let S = {
-  plants: [],
-  xp: 0,
-  log: []
-};
+let S = { plants: [], xp: 0, log: [] };
 
-function save() {
-  localStorage.setItem('plants-v2', JSON.stringify(S));
-}
+function save(){ localStorage.setItem("pcp", JSON.stringify(S)); }
+function load(){ const d = localStorage.getItem("pcp"); if(d) S = JSON.parse(d); }
 
-function load() {
-  const d = localStorage.getItem('plants-v2');
-  if (d) S = JSON.parse(d);
-}
+function today(){ return new Date().toISOString().split('T')[0]; }
+function days(d){ return Math.floor((Date.now() - new Date(d)) / 86400000); }
 
-function today() {
-  return new Date().toISOString().split('T')[0];
-}
+function hp(p){ return Math.max(0, 100 - days(p.watered)*10); }
+function hpColor(v){ return v>60?"green":v>30?"yellow":"red"; }
 
-function daysSince(d) {
-  return Math.floor((Date.now() - new Date(d)) / 86400000);
-}
+function render(){
+  const list = document.getElementById("plant-list");
 
-function hp(p) {
-  return Math.max(0, 100 - daysSince(p.watered) * 10);
-}
-
-function hpColor(v) {
-  return v > 60 ? "green" : v > 30 ? "yellow" : "red";
-}
-
-function renderGarden() {
-  const list = document.getElementById('plant-list');
-  if (!list) return;
-
-  if (!S.plants.length) {
-    list.innerHTML = "<div>No plants 🌱</div>";
-    return;
+  if(!S.plants.length){
+    list.innerHTML = "<p>No plants yet 🌱</p>";
+  } else {
+    list.innerHTML = S.plants.map((p,i)=>{
+      const h = hp(p);
+      return "<div class='plant-card'>"
+      +"<div class='plant-name'>"+p.name+"</div>"
+      +"<div class='bar'><div class='fill "+hpColor(h)+"' style='width:"+h+"%'></div></div>"
+      +"<button class='btn' onclick='water("+i+")'>💧 Water</button>"
+      +"<button class='btn' onclick='removePlant("+i+")'>🗑 Remove</button>"
+      +"</div>";
+    }).join("");
   }
 
-  let html = "";
+  document.getElementById("xp").textContent = S.xp;
+  document.getElementById("log").innerHTML = S.log.map(l=>"<div>"+l+"</div>").join("");
 
-  S.plants.forEach((p, i) => {
-    const h = hp(p);
-
-    html += "<div class='plant-card'>";
-    html += "<b>" + p.name + "</b>";
-    html += "<div class='bar'><div class='fill " + hpColor(h) + "' style='width:" + h + "%'></div></div>";
-    html += "<button class='btn' onclick='water(" + i + ")'>💧</button>";
-    html += "<button class='btn' onclick='removePlant(" + i + ")'>🗑</button>";
-    html += "</div>";
-  });
-
-  list.innerHTML = html;
-}
-
-function renderStats() {
-  document.getElementById("s-xp").textContent = S.xp;
-}
-
-function renderLog() {
-  const el = document.getElementById("log");
-  el.innerHTML = S.log.map(l => "<div>" + l + "</div>").join("");
-}
-
-function renderAll() {
-  renderGarden();
-  renderStats();
-  renderLog();
   save();
 }
 
-window.addPlant = function () {
-  const input = document.getElementById("f-name");
-  if (!input.value.trim()) return;
+window.addPlant = function(){
+  const el = document.getElementById("f-name");
+  if(!el.value.trim()) return;
 
-  S.plants.push({
-    name: input.value,
-    watered: today()
-  });
-
+  S.plants.push({ name: el.value, watered: today() });
   S.xp += 10;
-  S.log.unshift("Added " + input.value);
+  S.log.unshift("Added "+el.value);
 
-  input.value = "";
-  renderAll();
+  el.value="";
+  render();
 };
 
-window.water = function (i) {
+window.water = function(i){
   S.plants[i].watered = today();
   S.xp += 5;
-  S.log.unshift("Watered " + S.plants[i].name);
-  renderAll();
+  S.log.unshift("Watered "+S.plants[i].name);
+  render();
 };
 
-window.removePlant = function (i) {
-  S.log.unshift("Removed " + S.plants[i].name);
-  S.plants.splice(i, 1);
-  renderAll();
+window.removePlant = function(i){
+  S.log.unshift("Removed "+S.plants[i].name);
+  S.plants.splice(i,1);
+  render();
 };
 
-window.switchPanel = function (id, btn) {
-  document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
-  document.querySelectorAll(".nav-tab").forEach(b => b.classList.remove("active"));
+window.switchPanel = function(id, btn){
+  document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
+  document.querySelectorAll(".nav-tab").forEach(b=>b.classList.remove("active"));
 
-  document.getElementById("panel-" + id).classList.add("active");
+  document.getElementById("panel-"+id).classList.add("active");
   btn.classList.add("active");
 };
 
-window.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("DOMContentLoaded", ()=>{
   load();
-  renderAll();
+  render();
 });
 
 })();
