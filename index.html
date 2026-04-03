@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -66,13 +65,11 @@
       font-family: 'Crimson Pro', serif;
       font-weight: 600;
       font-size: 20px;
-      font-size: 28px;
       color: var(--osrs-gold);
       letter-spacing: 0.5px;
       display: flex;
       align-items: center;
       gap: 6px;
-      gap: 8px;
       white-space: nowrap;
     }
 
@@ -89,8 +86,6 @@
       border-radius: 4px;
       padding: 3px 8px;
       font-size: 11px;
-      padding: 5px 11px;
-      font-size: 15px;
       color: var(--osrs-gold-light);
       white-space: nowrap;
     }
@@ -113,19 +108,6 @@
       background: #1a0e04;
       border-top: 2px solid var(--osrs-border);
       padding-bottom: var(--safe-bottom);
-      /* extend background into the home indicator area */
-      padding-bottom: env(safe-area-inset-bottom, 0px);
-      position: relative;
-    }
-
-    /* solid colour fill below the nav into safe zone */
-    .bottom-nav::after {
-      content: '';
-      position: absolute;
-      bottom: calc(-1 * env(safe-area-inset-bottom, 0px));
-      left: 0; right: 0;
-      height: env(safe-area-inset-bottom, 0px);
-      background: #1a0e04;
     }
 
     .nav-tab {
@@ -136,22 +118,18 @@
       justify-content: center;
       gap: 2px;
       padding: 10px 4px;
-      gap: 3px;
-      padding: 12px 4px;
       cursor: pointer;
       border: none;
       background: transparent;
       color: #806030;
       font-family: 'Share Tech Mono', monospace;
       font-size: 10px;
-      font-size: 13px;
       transition: color 0.15s;
       user-select: none;
       -webkit-user-select: none;
     }
 
     .nav-tab .nav-icon { font-size: 20px; line-height: 1; }
-    .nav-tab .nav-icon { font-size: 28px; line-height: 1; }
     .nav-tab.active { color: var(--osrs-gold); }
     .nav-tab.active .nav-icon { filter: drop-shadow(0 0 4px #c8a04a88); }
 
@@ -162,14 +140,11 @@
     .panel-heading {
       font-family: 'Crimson Pro', serif;
       font-size: 14px;
-      font-size: 20px;
       color: var(--osrs-gold);
       letter-spacing: 0.5px;
       border-bottom: 1px solid var(--osrs-border);
       padding-bottom: 6px;
       margin-bottom: 12px;
-      padding-bottom: 8px;
-      margin-bottom: 14px;
     }
 
     /* ── Plant cards ── */
@@ -179,8 +154,6 @@
       border-radius: 4px;
       padding: 10px;
       margin-bottom: 10px;
-      padding: 14px;
-      margin-bottom: 12px;
       position: relative;
     }
 
@@ -200,56 +173,46 @@
     }
 
     .plant-emoji { font-size: 32px; line-height: 1; flex-shrink: 0; }
-    .plant-emoji { font-size: 46px; line-height: 1; flex-shrink: 0; }
 
     .plant-meta { flex: 1; min-width: 0; }
     .plant-name {
       font-family: 'Crimson Pro', serif;
       font-weight: 600;
       font-size: 16px;
-      font-size: 22px;
       color: var(--osrs-gold-light);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
     .plant-species { font-size: 10px; color: #806030; margin-top: 1px; }
-    .plant-species { font-size: 14px; color: #806030; margin-top: 2px; }
     .level-badge {
       background: var(--osrs-panel);
       border: 1px solid var(--osrs-border);
       border-radius: 3px;
       padding: 2px 7px;
       font-size: 11px;
-      padding: 3px 10px;
-      font-size: 15px;
       color: var(--osrs-gold);
       flex-shrink: 0;
     }
 
     /* bars */
     .bar-row { margin-bottom: 5px; }
-    .bar-row { margin-bottom: 7px; }
     .bar-label {
       display: flex;
       justify-content: space-between;
       font-size: 10px;
-      font-size: 14px;
       color: #a08040;
       margin-bottom: 2px;
-      margin-bottom: 3px;
     }
     .bar-bg {
       background: var(--osrs-panel);
       border: 1px solid #1a1408;
       height: 13px;
-      height: 18px;
       border-radius: 2px;
       overflow: hidden;
     }
     .bar-fill { height: 100%; transition: width 0.5s ease; position: relative; }
     .bar-fill::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: rgba(255,255,255,0.12); }
-    .bar-fill::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: rgba(255,255,255,0.12); }
     .hp-high { background: var(--osrs-hp-green); }
     .hp-mid  { background: var(--osrs-hp-yellow); }
     .hp-low  { background: var(--osrs-hp-red); }
@@ -261,9 +224,6 @@
       gap: 10px;
       font-size: 10px;
       margin: 6px 0 8px;
-      gap: 12px;
-      font-size: 14px;
-      margin: 8px 0 10px;
       flex-wrap: wrap;
     }
     .next-care .urgent { color: var(--osrs-hp-red); }
@@ -271,18 +231,15 @@
     .next-care .ok     { color: var(--osrs-hp-green); }
 
     .card-actions { display: flex; gap: 6px; }
-    .card-actions { display: flex; gap: 8px; }
 
     .btn {
       flex: 1;
       font-family: 'Share Tech Mono', monospace;
       font-size: 12px;
-      font-size: 16px;
       background: var(--osrs-panel);
       border: 1px solid var(--osrs-border);
       color: var(--osrs-gold-light);
       padding: 9px 4px;
-      padding: 12px 4px;
       border-radius: 3px;
       cursor: pointer;
       text-align: center;
@@ -294,7 +251,6 @@
     .btn.water { border-color: #1565c0; color: #64b5f6; background: #0d1c3a; }
     .btn.fert  { border-color: #5a3e10; color: #c49a3c; }
     .btn.del   { border-color: #7a1010; color: #e57373; background: #1a0505; flex: 0 0 44px; }
-    .btn.del   { border-color: #7a1010; color: #e57373; background: #1a0505; flex: 0 0 52px; }
 
     /* ── Empty state ── */
     .empty-state {
@@ -305,15 +261,10 @@
     .empty-state .e-icon { font-size: 48px; margin-bottom: 0.5rem; opacity: 0.45; }
     .empty-state p { font-family: 'Crimson Pro', serif; font-size: 15px; }
     .empty-state small { font-size: 12px; color: #3d2e14; margin-top: 4px; display: block; }
-    .empty-state .e-icon { font-size: 64px; margin-bottom: 0.5rem; opacity: 0.45; }
-    .empty-state p { font-family: 'Crimson Pro', serif; font-size: 20px; }
-    .empty-state small { font-size: 16px; color: #3d2e14; margin-top: 6px; display: block; }
 
     /* ── Add form ── */
     .form-group { margin-bottom: 12px; }
     .form-label { display: block; font-size: 11px; color: #a08040; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
-    .form-group { margin-bottom: 14px; }
-    .form-label { display: block; font-size: 14px; color: #a08040; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; }
 
     .form-input, .form-select {
       width: 100%;
@@ -322,17 +273,14 @@
       border-radius: 3px;
       color: var(--osrs-text);
       padding: 10px 10px;
-      padding: 12px 12px;
       font-family: 'Share Tech Mono', monospace;
       font-size: 14px;
-      font-size: 16px;
       outline: none;
       appearance: none;
       -webkit-appearance: none;
     }
     .form-input:focus, .form-select:focus { border-color: var(--osrs-gold); }
     .form-select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23c8a04a'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; }
-    .form-select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23c8a04a'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
 
     .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
@@ -341,12 +289,10 @@
       font-family: 'Crimson Pro', serif;
       font-weight: 600;
       font-size: 16px;
-      font-size: 20px;
       background: linear-gradient(180deg, #5a3a10, #3a2608);
       border: 1px solid var(--osrs-gold);
       color: var(--osrs-gold);
       padding: 13px;
-      padding: 15px;
       border-radius: 3px;
       cursor: pointer;
       margin-top: 4px;
@@ -367,56 +313,41 @@
       border: 1px solid var(--osrs-border);
       border-radius: 4px;
       padding: 12px 10px;
-      padding: 14px 10px;
       text-align: center;
     }
     .s-val { font-family: 'Crimson Pro', serif; font-size: 28px; font-weight: 600; color: var(--osrs-gold); display: block; }
     .s-lbl { font-size: 10px; color: #806030; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
-    .s-val { font-family: 'Crimson Pro', serif; font-size: 38px; font-weight: 600; color: var(--osrs-gold); display: block; }
-    .s-lbl { font-size: 13px; color: #806030; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
 
     .skill-row {
       display: flex;
       align-items: center;
       gap: 10px;
       padding: 7px 0;
-      gap: 12px;
-      padding: 9px 0;
       border-bottom: 1px solid #1a1408;
     }
     .sk-icon { font-size: 18px; width: 24px; text-align: center; }
     .sk-name { font-size: 12px; color: var(--osrs-gold-light); min-width: 90px; }
     .sk-bar-bg { flex: 1; height: 11px; background: var(--osrs-panel); border: 1px solid #1a1408; border-radius: 1px; overflow: hidden; }
-    .sk-icon { font-size: 24px; width: 28px; text-align: center; }
-    .sk-name { font-size: 16px; color: var(--osrs-gold-light); min-width: 100px; }
-    .sk-bar-bg { flex: 1; height: 14px; background: var(--osrs-panel); border: 1px solid #1a1408; border-radius: 1px; overflow: hidden; }
     .sk-bar-fill { height: 100%; background: var(--osrs-xp); transition: width 0.7s ease; }
     .sk-lvl { font-size: 12px; color: var(--osrs-gold); min-width: 24px; text-align: right; }
-    .sk-lvl { font-size: 15px; color: var(--osrs-gold); min-width: 28px; text-align: right; }
 
     /* ── Log ── */
     .log-entry {
       display: flex;
       gap: 8px;
-      gap: 10px;
       align-items: flex-start;
       padding: 7px 0;
-      padding: 9px 0;
       border-bottom: 1px solid #1a1408;
       font-size: 12px;
-      font-size: 15px;
     }
     .log-time { color: #5a4020; font-size: 10px; min-width: 42px; padding-top: 1px; }
-    .log-time { color: #5a4020; font-size: 13px; min-width: 48px; padding-top: 1px; }
     .log-msg { flex: 1; color: var(--osrs-text); }
     .log-xp { color: var(--osrs-xp); font-size: 11px; white-space: nowrap; }
-    .log-xp { color: var(--osrs-xp); font-size: 14px; white-space: nowrap; }
 
     /* ── XP Toast ── */
     .xp-toast {
       position: fixed;
       top: calc(var(--safe-top) + 70px);
-      top: calc(var(--safe-top) + 80px);
       left: 50%;
       transform: translateX(-50%) translateY(-6px);
       background: var(--osrs-brown-dark);
@@ -424,8 +355,6 @@
       border-radius: 4px;
       padding: 8px 16px;
       font-size: 14px;
-      padding: 10px 20px;
-      font-size: 17px;
       color: var(--osrs-xp);
       z-index: 999;
       pointer-events: none;
@@ -439,43 +368,31 @@
     .legend { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
     .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #a08040; }
     .legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
-    .legend { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; }
-    .legend-item { display: flex; align-items: center; gap: 6px; font-size: 14px; color: #a08040; }
-    .legend-dot { width: 13px; height: 13px; border-radius: 2px; flex-shrink: 0; }
 
     /* alert badge on nav */
     .nav-badge {
       position: absolute;
       top: 6px;
       right: calc(50% - 18px);
-      top: 8px;
-      right: calc(50% - 22px);
       background: var(--osrs-hp-red);
       color: #fff;
       font-size: 9px;
       min-width: 14px;
       height: 14px;
       border-radius: 7px;
-      font-size: 11px;
-      min-width: 17px;
-      height: 17px;
-      border-radius: 9px;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 0 3px;
-      padding: 0 4px;
     }
     .nav-tab { position: relative; }
   </style>
-
 </head>
 <body>
 
 <div class="app-shell">
 
   <!-- Header -->
-
   <div class="osrs-header">
     <div class="osrs-logo">🌿 Plant-Care Pro</div>
     <div class="header-chips">
@@ -485,11 +402,9 @@
   </div>
 
   <!-- XP Toast -->
-
   <div class="xp-toast" id="xp-toast"></div>
 
   <!-- Scrollable content -->
-
   <div class="app-body" id="app-body">
 
     <!-- Garden Panel -->
@@ -501,16 +416,6 @@
       </div>
       <div id="plant-list"></div>
     </div>
-```
-<!-- Garden Panel -->
-<div class="panel active" id="panel-garden">
-  <div class="legend">
-    <div class="legend-item"><div class="legend-dot" style="background:#00b050"></div>Healthy</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#ffcc00"></div>Needs care</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#e84118"></div>Critical</div>
-  </div>
-  <div id="plant-list"></div>
-</div>
 
     <!-- Add Plant Panel -->
     <div class="panel" id="panel-add">
@@ -562,31 +467,6 @@
 
       <button class="submit-btn" onclick="addPlant()">➕ Plant Seed</button>
     </div>
-<!-- Add Plant Panel -->
-<div class="panel" id="panel-add">
-  <div class="panel-heading">Add Plant to Patch</div>
-
-  <div class="form-group">
-    <label class="form-label">Plant Name</label>
-    <input class="form-input" id="f-name" placeholder="e.g. Monstera Stan" maxlength="28" />
-  </div>
-
-  <div class="form-group">
-    <label class="form-label">Species</label>
-    <select class="form-select" id="f-species">
-      <option value="Monstera deliciosa">🌿 Monstera</option>
-      <option value="Epipremnum aureum">🍃 Pothos</option>
-      <option value="Sansevieria trifasciata">🗡️ Snake Plant</option>
-      <option value="Ficus lyrata">🌳 Fiddle Leaf Fig</option>
-      <option value="Cactaceae">🌵 Cactus</option>
-      <option value="Orchidaceae">🌸 Orchid</option>
-      <option value="Spathiphyllum">🤍 Peace Lily</option>
-      <option value="Chlorophytum comosum">🌾 Spider Plant</option>
-      <option value="Aloe vera">🌱 Aloe Vera</option>
-      <option value="Hedera helix">🍀 Ivy</option>
-      <option value="Custom">🌺 Other</option>
-    </select>
-  </div>
 
     <!-- Stats Panel -->
     <div class="panel" id="panel-stats">
@@ -616,16 +496,7 @@
         <div class="sk-bar-bg"><div class="sk-bar-fill" id="sk-hort" style="width:0%"></div></div>
         <div class="sk-lvl" id="sk-hort-lv">1</div>
       </div>
-  <div class="row-2">
-    <div class="form-group">
-      <label class="form-label">Water every (days)</label>
-      <input class="form-input" id="f-water" type="number" min="1" max="60" value="7" inputmode="numeric" />
     </div>
-    <div class="form-group">
-      <label class="form-label">Fertilise every (days)</label>
-      <input class="form-input" id="f-fert" type="number" min="7" max="90" value="30" inputmode="numeric" />
-    </div>
-  </div>
 
     <!-- Log Panel -->
     <div class="panel" id="panel-log">
@@ -633,63 +504,11 @@
       <div id="log-list">
         <div class="empty-state"><div class="e-icon">📜</div><p>No activity yet.</p><small>Go tend your garden!</small></div>
       </div>
-  <div class="row-2">
-    <div class="form-group">
-      <label class="form-label">Last watered</label>
-      <input class="form-input" id="f-last-water" type="date" />
     </div>
-    <div class="form-group">
-      <label class="form-label">Last fertilised</label>
-      <input class="form-input" id="f-last-fert" type="date" />
-    </div>
-  </div>
-
-  <button class="submit-btn" onclick="addPlant()">➕ Plant Seed</button>
-</div>
-
-<!-- Stats Panel -->
-<div class="panel" id="panel-stats">
-  <div class="panel-heading">Farming Stats</div>
-  <div class="summary-grid">
-    <div class="summary-card"><span class="s-val" id="s-total">0</span><div class="s-lbl">Total Plants</div></div>
-    <div class="summary-card"><span class="s-val" id="s-healthy">0</span><div class="s-lbl">Healthy</div></div>
-    <div class="summary-card"><span class="s-val" id="s-tasks">0</span><div class="s-lbl">Tasks Done</div></div>
-    <div class="summary-card"><span class="s-val" id="s-xp">0</span><div class="s-lbl">Total XP</div></div>
-  </div>
-  <div class="panel-heading">Skill Levels</div>
-  <div class="skill-row">
-    <div class="sk-icon">💧</div>
-    <div class="sk-name">Watering</div>
-    <div class="sk-bar-bg"><div class="sk-bar-fill" id="sk-water" style="width:0%"></div></div>
-    <div class="sk-lvl" id="sk-water-lv">1</div>
-  </div>
-  <div class="skill-row">
-    <div class="sk-icon">🌱</div>
-    <div class="sk-name">Fertilising</div>
-    <div class="sk-bar-bg"><div class="sk-bar-fill" id="sk-fert" style="width:0%"></div></div>
-    <div class="sk-lvl" id="sk-fert-lv">1</div>
-  </div>
-  <div class="skill-row">
-    <div class="sk-icon">🏡</div>
-    <div class="sk-name">Horticulture</div>
-    <div class="sk-bar-bg"><div class="sk-bar-fill" id="sk-hort" style="width:0%"></div></div>
-    <div class="sk-lvl" id="sk-hort-lv">1</div>
-  </div>
-</div>
-
-<!-- Log Panel -->
-<div class="panel" id="panel-log">
-  <div class="panel-heading">Activity Log</div>
-  <div id="log-list">
-    <div class="empty-state"><div class="e-icon">📜</div><p>No activity yet.</p><small>Go tend your garden!</small></div>
-  </div>
-</div>
-```
 
   </div><!-- /app-body -->
 
   <!-- Bottom Nav -->
-
   <div class="bottom-nav">
     <button class="nav-tab active" data-panel="garden" onclick="switchPanel('garden', this)">
       <div class="nav-icon">🌿</div>
@@ -862,80 +681,6 @@
   // ── Actions ──
 
   window.doWater = function (i) {
-    const p = S.plants[i];
-    const xp = 25 + Math.floor(p.level * 5);
-    p.lastWatered = today();
-    p.level = Math.min(p.level + 1, 99);
-    S.waterXp += xp; S.hortXp += Math.floor(xp / 2); S.totalXp += xp; S.tasksDone++;
-    addLog(`Watered ${p.name}`, xp);
-    toast(`💧 Watering XP +${xp}!`);
-    renderAll();
-  };
-
-  window.doFert = function (i) {
-    const p = S.plants[i];
-    const xp = 45 + Math.floor(p.level * 8);
-    p.lastFertilised = today();
-    p.level = Math.min(p.level + 1, 99);
-    S.fertXp += xp; S.hortXp += Math.floor(xp / 2); S.totalXp += xp; S.tasksDone++;
-    addLog(`Fertilised ${p.name}`, xp);
-    toast(`🌱 Farming XP +${xp}!`);
-    renderAll();
-  };
-
-  window.doRemove = function (i) {
-    const name = S.plants[i].name;
-    if (!confirm(`Remove ${name} from your patch?`)) return;
-    S.plants.splice(i, 1);
-    addLog(`Removed ${name} from patch`, 0);
-    renderAll();
-  };
-
-  window.addPlant = function () {
-    const name = document.getElementById('f-name').value.trim();
-    if (!name) { document.getElementById('f-name').focus(); return; }
-    const plant = {
-      name,
-      species: document.getElementById('f-species').value,
-      waterEvery: parseInt(document.getElementById('f-water').value) || 7,
-      fertEvery: parseInt(document.getElementById('f-fert').value) || 30,
-      lastWatered: document.getElementById('f-last-water').value || today(),
-      lastFertilised: document.getElementById('f-last-fert').value || today(),
-      level: 1
-    };
-    S.plants.push(plant);
-    S.hortXp += 10; S.totalXp += 10;
-    addLog(`Added ${plant.name} to the patch`, 10);
-    document.getElementById('f-name').value = '';
-    toast(`🌿 New plant! +10 XP`);
-    switchPanel('garden', document.querySelector('[data-panel="garden"]'));
-    renderAll();
-  };
-
-  // ── Nav ──
-
-  window.switchPanel = function (id, btn) {
-    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-    document.getElementById('panel-' + id).classList.add('active');
-    btn.classList.add('active');
-    document.getElementById('app-body').scrollTop = 0;
-    if (id === 'stats') renderStats();
-    if (id === 'log') renderLog();
-  };
-
-  // ── Init ──
-  const t = today();
-  document.getElementById('f-last-water').value = t;
-  document.getElementById('f-last-fert').value = t;
-
-  setInterval(renderGarden, 60000);
-  renderAll();
-})();
-</script>
-
-</body>
-</html>
     const p = S.plants[i];
     const xp = 25 + Math.floor(p.level * 5);
     p.lastWatered = today();
